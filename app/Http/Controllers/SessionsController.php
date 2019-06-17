@@ -6,6 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 class SessionsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('guest', [
+            'only' => ['create']
+        ]);
+    }
+
     public function create()
     {
         return view('sessions.create');
@@ -21,10 +28,9 @@ class SessionsController extends Controller
             session()->flash('success','欢迎');
             return redirect()->route('users.show',[Auth::user()]);
         } else {
-            session()->flash('danger',"很抱歉，您的邮箱和密码不匹配",'112');
+            session()->flash('danger',"很抱歉，您的邮箱和密码不匹配");
+            return redirect()->back()->withInput();
         }
-
-        return;
     }
 
     public function destroy()
